@@ -335,7 +335,9 @@ const main = async () => {
     allInOneResult.live = liveData
 
     const cmsData = JSON.parse(fs.readFileSync('cms/cms.json', 'utf8'))
+    const avcmsData = JSON.parse(fs.readFileSync('cms/18xcms.json', 'utf8'))
     allInOneResult.vod.push(...cmsData)
+    allInOneResult.vod.push(...avcmsData)
     allInOneResult.vod.sort(sortByOrder)
 
     // 5. 重新组织顺序
