@@ -4,5 +4,41 @@
     "name": "[采] 电影天堂",
     "order": "D3",
     "type": 0
+  },
+  {
+    "api": "https://caiji.maotaizy.cc/api.php/provide/vod/at/josn/",
+    "name": "[采] 茅台资源",
+    "order": "D3",
+    "type": 0
+  },
+  {
+    "api": "https://caiji.dbzy5.com/api.php/provide/vod/at/josn/",
+    "name": "[采] 豆瓣资源",
+    "order": "D3",
+    "type": 0
+  },
+  {
+    "api": "https://jszyapi.com/api.php/provide/vod",
+    "name": "[采] 极速资源",
+    "order": "D3",
+    "type": 0
+  },
+  {
+    "api": "https://suoniapi.com/api.php/provide/vod/?ac=list",
+    "name": "[采] 索尼资源",
+    "order": "D3",
+    "type": 0
+  },
+  {
+    "api": "https://api.guangsuapi.com/api.php/provide/vod/josn",
+    "name": "[采] 光速资源",
+    "order": "D3",
+    "type": 0
+  },
+  {
+    "api": "https://jyzyapi.com/provide/vod/from/jinyingm3u8/at/json",
+    "name": "[采] 金鹰资源",
+    "order": "D3",
+    "type": 0
   }
 ]
