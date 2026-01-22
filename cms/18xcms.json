@@ -154,5 +154,11 @@
         "name": "[采] AV-黑料资源",
         "order": "D3",
         "type": 0
+    },
+    {
+        "api": "https://xzybb1.com/api.php/provide/vod/?ac=list",
+        "name": "[采] AV-幸资源",
+        "order": "D3",
+        "type": 0
     }
 ]
