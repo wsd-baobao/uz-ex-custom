@@ -85,14 +85,14 @@ class hohojClass extends WebApiBase {
             let proData = pro.data
             if (proData) {
                 let document = parse(proData)
-                let allVideo = document.querySelector('.excerpts-wrapper').querySelectorAll('article')
+                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div')
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
                     let vodUrl = element.querySelector('a')?.attributes['href'] ?? ''
-                    let vodPic = element.querySelector('img')?.attributes['data-src'] ?? ''
-                    let vodName = element.querySelector('h2')?.text ?? ''
-                    let vodDiJiJi = element.querySelector('.post-view')?.text ?? ''
+                    let vodPic = element.querySelector('img')?.attributes['src'] ?? ''
+                    let vodName = element.querySelector('div')?.text ?? ''
+                    let vodDiJiJi = element.querySelector('.me-2')?.text ?? ''
 
                     let videoDet = {}
                     videoDet.vod_id = vodUrl
@@ -202,14 +202,14 @@ class hohojClass extends WebApiBase {
             let proData = pro.data
             if (proData) {
                 let document = parse(proData)
-                let allVideo = document.querySelector('.excerpts-wrapper').querySelectorAll('article')
+                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div')
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
                     let vodUrl = element.querySelector('a')?.attributes['href'] ?? ''
-                    let vodPic = element.querySelector('img')?.attributes['data-src'] ?? ''
-                    let vodName = element.querySelector('h2')?.text ?? ''
-                    let vodDiJiJi = element.querySelector('.post-view')?.text ?? ''
+                    let vodPic = element.querySelector('img')?.attributes['src'] ?? ''
+                    let vodName = element.querySelector('div')?.text ?? ''
+                    let vodDiJiJi = element.querySelector('.me-2')?.text ?? ''
 
                     let videoDet = {}
                     videoDet.vod_id = vodUrl
