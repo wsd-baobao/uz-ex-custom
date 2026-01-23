@@ -40,13 +40,13 @@ class hohojClass extends WebApiBase {
 
         try {
             let manualClassList = [
-                { type_name: "无新", type_url: "/search?type=uncensored&order=latest" },
-                { type_name: "无热", type_url: "/search?type=uncensored&order=popular" },
-                { type_name: "中热", type_url: "/search?type=chinese&order=popular" },
-                { type_name: "中新", type_url: "/search?type=chinese&order=latest" },
-                { type_name: "有新", type_url: "/search?type=censored&order=latest" },
-                { type_name: "欧新", type_url: "/search?type=europe&order=latest" },
-                { type_name: "多P", type_url: "/ctg?id=16&name=多P" }
+                { type_name: "无新", type_id: "/search?type=uncensored&order=latest" },
+                { type_name: "无热", type_id: "/search?type=uncensored&order=popular" },
+                { type_name: "中热", type_id: "/search?type=chinese&order=popular" },
+                { type_name: "中新", type_id: "/search?type=chinese&order=latest" },
+                { type_name: "有新", type_id: "/search?type=censored&order=latest" },
+                { type_name: "欧新", type_id: "/search?type=europe&order=latest" },
+                { type_name: "多P", type_id: "/ctg?id=16&name=多P" }
             ];
 
             let list = []
@@ -113,7 +113,7 @@ class hohojClass extends WebApiBase {
                 backData.data = videos
             }
         } catch (error) {
-            backData.error = '获取列表失败～' + error.message + pro.error
+            backData.error = '获取列表失败～' + error.message
         }
         return JSON.stringify(backData)
     }
