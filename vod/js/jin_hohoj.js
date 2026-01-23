@@ -56,7 +56,7 @@ class hohojClass extends WebApiBase {
                 videoClass.type_name = item.type_name
                 list.push(videoClass)
             }
-
+            backData.data = list
 
         } catch (error) {
             backData.error = '获取分类失败～' + error.message
