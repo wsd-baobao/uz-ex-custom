@@ -100,7 +100,7 @@ class hohojClass extends WebApiBase {
                 backData.data = videos
             }
         } catch (error) {
-            backData.error = '获取列表失败～' + error.message
+            backData.error = '获取列表失败～' + error.message + pro.error
         }
         return JSON.stringify(backData)
     }
