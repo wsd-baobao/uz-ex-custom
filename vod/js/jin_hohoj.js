@@ -71,7 +71,7 @@ class hohojClass extends WebApiBase {
      * @returns {Promise<RepVideoList>}
      */
     async getVideoList(args) {
-        let listUrl = this.webSite + this.removeTrailingSlash(args.url) + '&p=' + args.page
+        let listUrl = this.url + this.removeTrailingSlash(args.url) + '&p=' + args.page
         let backData = new RepVideoList()
         try {
             let pro = await req(listUrl, { headers: this.headers })
@@ -203,7 +203,7 @@ class hohojClass extends WebApiBase {
      */
     async searchVideo(args) {
         let backData = new RepVideoList()
-        let url = this.removeTrailingSlash(this.webSite) + `/search?text=${args.searchWord}`
+        let url = this.removeTrailingSlash(this.url) + `/search?text=${args.searchWord}`
 
         try {
             let pro = await req(url, { headers: this.headers })
