@@ -38,31 +38,26 @@ class hohojClass extends WebApiBase {
         let backData = new RepVideoClassList()
 
         try {
-            const pro = await req(webUrl, { headers: this.headers })
-            backData.error = pro.error
-            let proData = pro.data
+            let manualClassList = [
+                { type_name: "无新", type_url: "/search?type=uncensored&order=latest" },
+                { type_name: "无热", type_url: "/search?type=uncensored&order=popular" },
+                { type_name: "中热", type_url: "/search?type=chinese&order=popular" },
+                { type_name: "中新", type_url: "/search?type=chinese&order=latest" },
+                { type_name: "有新", type_url: "/search?type=censored&order=latest" },
+                { type_name: "欧新", type_url: "/search?type=europe&order=latest" },
+                { type_name: "多P", type_url: "/ctg?id=16&name=多P" }
+            ];
 
-            if (proData) {
-                let document = parse(proData)
-                let allClass = document.querySelectorAll('.navbar-nav.flex-row a.nav-link')
-                let list = []
-                for (let index = 0; index < allClass.length; index++) {
-                    const element = allClass[index]
-                    // let isIgnore = this.isIgnoreClassName(element.text)
-                    // if (isIgnore) {
-                    //     continue
-                    // }
-                    let type_name = element.text
-                    let url = element.attributes['href']
-                    if (url.length > 0 && type_name.length > 0) {
-                        let videoClass = new VideoClass()
-                        videoClass.type_id = url
-                        videoClass.type_name = type_name
-                        list.push(videoClass)
-                    }
-                }
-                backData.data = list
+            let list = []
+            for (let i = 0; i < manualClassList.length; i++) {
+                const item = manualClassList[i]
+                let videoClass = new VideoClass()
+                videoClass.type_id = item.type_url
+                videoClass.type_name = item.type_name
+                list.push(videoClass)
             }
+
+
         } catch (error) {
             backData.error = '获取分类失败～' + error.message
         }
