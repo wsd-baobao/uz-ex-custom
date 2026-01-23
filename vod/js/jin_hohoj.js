@@ -11,6 +11,7 @@ import { } from '../../core/uzVideo.js'
 import { } from '../../core/uzHome.js'
 import { } from '../../core/uz3lib.js'
 import { } from '../../core/uzUtils.js'
+import { parse } from '../../core/cheerio.js'
 // ignore
 
 class hohojClass extends WebApiBase {
@@ -22,7 +23,7 @@ class hohojClass extends WebApiBase {
         this.url = 'https://hohoj.tv'
         this.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-            'Host': "www.hohoj.tv",
+            'Host': "www.hohoj.tv"
         }
     }
 
@@ -77,11 +78,23 @@ class hohojClass extends WebApiBase {
             backData.error = pro.error
             let proData = pro.data
             if (proData) {
+
+                if (!proData) {
+                    throw new Error('请求返回数据为空')
+                }
+
                 let document = parse(proData)
+
                 if (document == null) {
                     throw new Error('解析HTML失败～')
                 }
+
                 let allVideo = document.querySelectorAll('div.video-item')
+
+                if (allVideo.length === 0) {
+                    throw new Error('未找到视频元素')
+                }
+
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
