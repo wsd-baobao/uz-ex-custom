@@ -81,7 +81,7 @@ class hohojClass extends WebApiBase {
                 if (document == null) {
                     throw new Error('解析HTML失败～')
                 }
-                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('.video-item')
+                let allVideo = document.querySelectorAll('div.video-item')
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
