@@ -75,7 +75,7 @@ class hohojClass extends WebApiBase {
      * @returns {Promise<RepVideoList>}
      */
     async getVideoList(args) {
-        let listUrl = this.removeTrailingSlash(args.url) + '/search?type=all&p=' + args.page
+        let listUrl = this.removeTrailingSlash(args.url) + '&p=' + args.page
         let backData = new RepVideoList()
         try {
             let pro = await req(listUrl, { headers: this.headers })
@@ -200,7 +200,7 @@ class hohojClass extends WebApiBase {
             let proData = pro.data
             if (proData) {
                 let document = parse(proData)
-                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div')
+                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div.video-item')
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
