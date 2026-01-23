@@ -83,7 +83,7 @@ class hohojClass extends WebApiBase {
             let proData = pro.data
             if (proData) {
                 let document = parse(proData)
-                let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div.video-item')
+                let allVideo = document.querySelector('.video-list').querySelectorAll('.video-item')
                 let videos = []
                 for (let index = 0; index < allVideo.length; index++) {
                     const element = allVideo[index]
