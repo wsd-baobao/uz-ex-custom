@@ -11,7 +11,7 @@ import { } from '../../core/uzVideo.js'
 import { } from '../../core/uzHome.js'
 import { } from '../../core/uz3lib.js'
 import { } from '../../core/uzUtils.js'
-import { parse } from '../../core/cheerio.js'
+// import { parse } from '../../core/cheerio.js'
 // ignore
 
 class hohojClass extends WebApiBase {
@@ -71,7 +71,7 @@ class hohojClass extends WebApiBase {
      * @returns {Promise<RepVideoList>}
      */
     async getVideoList(args) {
-        let listUrl = this.removeTrailingSlash(args.url) + '&p=' + args.page
+        let listUrl = this.webSite + this.removeTrailingSlash(args.url) + '&p=' + args.page
         let backData = new RepVideoList()
         try {
             let pro = await req(listUrl, { headers: this.headers })
