@@ -53,7 +53,7 @@ class hohojClass extends WebApiBase {
             for (let i = 0; i < manualClassList.length; i++) {
                 const item = manualClassList[i]
                 let videoClass = new VideoClass()
-                videoClass.type_id = item.type_url
+                videoClass.type_id = item.type_id
                 videoClass.type_name = item.type_name
                 list.push(videoClass)
             }
@@ -86,13 +86,13 @@ class hohojClass extends WebApiBase {
                 let document = parse(proData)
 
                 if (document == null) {
-                    throw new Error('解析HTML失败～')
+                    throw new Error('解析HTML失败～' + document)
                 }
 
                 let allVideo = document.querySelectorAll('div.video-item')
 
                 if (allVideo.length === 0) {
-                    throw new Error('未找到视频元素')
+                    throw new Error('未找到视频元素' + allVideo)
                 }
 
                 let videos = []
