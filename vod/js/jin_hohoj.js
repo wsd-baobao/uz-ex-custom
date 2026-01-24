@@ -1,6 +1,6 @@
 // ignore
 //@name:[禁] 好好j
-//@version:3
+//@version:2
 //@webSite:https://hohoj.tv
 //@remark:
 //@type:100
@@ -71,7 +71,7 @@ class hohojClass extends WebApiBase {
      * @returns {Promise<RepVideoList>}
      */
     async getVideoList(args) {
-        let listUrl = this.url + this.removeTrailingSlash(args.url) + '&p=' + args.page
+        let listUrl = this.removeTrailingSlash(args.url) + '&p=' + args.page
         let backData = new RepVideoList()
         try {
             let pro = await req(listUrl, { headers: this.headers })
