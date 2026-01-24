@@ -1,6 +1,6 @@
 // ignore
 //@name:[禁] 好好j
-//@version:2
+//@version:3
 //@webSite:https://hohoj.tv
 //@remark:
 //@type:100
