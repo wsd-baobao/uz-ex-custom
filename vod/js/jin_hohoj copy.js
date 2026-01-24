@@ -95,7 +95,8 @@ const appConfig = {
     },
     _headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-        'Host': "www.hohoj.tv"
+        'Host': "www.hohoj.tv",
+        'Referer': 'no-referrer'
     },
     get headers() {
         return this._headers
@@ -163,23 +164,17 @@ async function getVideoList(args) {
         backData.error = pro.error
         let proData = pro.data
         if (proData) {
-
             if (!proData) {
                 throw new Error('请求返回数据为空')
             }
-
             let document = parse(proData)
-
             if (document == null) {
                 throw new Error('解析HTML失败～' + document)
             }
-
             let allVideo = document.querySelectorAll('div.video-item')
-
             if (allVideo.length === 0) {
                 throw new Error('未找到视频元素' + allVideo)
             }
-
             let videos = []
             for (let index = 0; index < allVideo.length; index++) {
                 const element = allVideo[index]
@@ -232,7 +227,7 @@ async function getVideoDetail(args) {
         if (proData) {
             let document = parse(proData)
             let vod_content = ''
-            let vod_pic = document.querySelector('.img-placeholder')?.attributes['src'] ?? ''
+            let vod_pic = document.querySelector('.img-placeholder').getAttribute('src') ?? ''
             let vod_name = document.querySelector('.article-title')?.text ?? ''
             let vod_year = ''
             let vod_director = ''
@@ -241,6 +236,7 @@ async function getVideoDetail(args) {
             let vod_lang = ''
             let vod_douban_score = ''
             let type_name = document.querySelector('#latest-jav-carousel > div.glide__track > ul > li.glide__slide.glide__slide--active > div > div:nth-child(1) > a > div.video-item-title.mt-1')?.text ?? ''
+            let play_url = document.querySelector('body > div.container.mt-3 > div > div.col.player-col > iframe').getAttribute('src')
 
             let detModel = new VideoDetail()
             detModel.vod_year = vod_year
@@ -254,7 +250,7 @@ async function getVideoDetail(args) {
             detModel.vod_pic = vod_pic
             detModel.vod_name = vod_name
             detModel.vod_play_url = `$${webUrl}#`
-            detModel.vod_id = webUrl
+            detModel.vod_id = args.url
 
             backData.data = detModel
         }
@@ -273,23 +269,21 @@ async function getVideoPlayUrl(args) {
     var backData = new RepVideoPlayUrl()
     let url = args.url
     try {
-        let html = await req(url, { headers: this.headers })
+        let html = await req(url, { headers: appConfig.headers })
         backData.error = html.error
         let document = parse(html.data)
+        let w = document.querySelector('iframe.player').getAttribute('src')
+        let embed = await req(appConfig.webSite + w, { headers: appConfig.headers })
+        backData.error = embed.error
+        let embedData = embed.data
+        if (embedData) {
+            let document = parse(embedData)
+            let m3u8 = document.querySelector('body > script').text.match(/var videoSrc = (.+);/)[1]
+            backData.data = m3u8
+        }
 
-        let w = document.querySelector('body > div.container.mt-3 > div > div.col.player-col > iframe').getAttribute('src')
-        let dash = UZUtils.getHostFromURL(w)
-        let dashResp = (await req(w, { headers: this.headers })).data
-        let dashHtml = parse(dashResp)
-        let html2 = dashHtml.querySelectorAll('body script')[5].text
-        let token = html2.match(/var token = (.+);/)[1]
-        let m3u8 = html2.match(/var m3u8 = (.+);/)[1]
-
-        let play_url = dash + m3u8 + '?token=' + token
-
-        backData.data = play_url.replace(/'|"/gm, '')
     } catch (error) {
-        backData.error = error.toString()
+        backData.error = error.toString() + "||||" + w.toString()
     }
     return JSON.stringify(backData)
 }
@@ -301,7 +295,31 @@ async function getVideoPlayUrl(args) {
  */
 async function searchVideo(args) {
     var backData = new RepVideoList()
+    let url = appConfig.webSite + `/search?text=${args.searchWord}`
     try {
+        let pro = await req(url, { headers: appConfig.headers })
+        backData.error = pro.error
+        let proData = pro.data
+        if (proData) {
+            let document = parse(proData)
+            let allVideo = document.querySelector('body > div.search.container.mt-4 > div.video-list > div:nth-child(1)').querySelectorAll('div.video-item')
+            let videos = []
+            for (let index = 0; index < allVideo.length; index++) {
+                const element = allVideo[index]
+                let vodUrl = element.querySelector('a')?.attributes['href'] ?? ''
+                let vodPic = element.querySelector('img')?.attributes['src'] ?? ''
+                let vodName = element.querySelector('div')?.text ?? ''
+                let vodDiJiJi = element.querySelector('.me-2')?.text ?? ''
+
+                let videoDet = {}
+                videoDet.vod_id = vodUrl
+                videoDet.vod_pic = vodPic
+                videoDet.vod_name = vodName
+                videoDet.vod_remarks = vodDiJiJi.trim()
+                videos.push(videoDet)
+            }
+            backData.data = videos
+        }
     } catch (error) {
         backData.error = error.toString()
     }
