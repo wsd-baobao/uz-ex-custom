@@ -93,6 +93,13 @@ const appConfig = {
     set uzTag(value) {
         this._uzTag = value
     },
+    _headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+        'Host': "www.hohoj.tv"
+    },
+    get headers() {
+        return this._headers
+    },
 }
 
 /**
@@ -150,8 +157,9 @@ async function getSubclassList(args) {
  */
 async function getVideoList(args) {
     var backData = new RepVideoList()
+    let listUrl = appConfig.webSite + args.url
     try {
-        let pro = await req(listUrl, { headers: this.headers })
+        let pro = await req(listUrl, { headers: appConfig.headers })
         backData.error = pro.error
         let proData = pro.data
         if (proData) {
