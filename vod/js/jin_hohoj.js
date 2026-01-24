@@ -156,7 +156,7 @@ async function getSubclassList(args) {
  */
 async function getVideoList(args) {
     var backData = new RepVideoList()
-    let listUrl = appConfig.webSite + args.url
+    let listUrl = appConfig.webSite + args.url + '&p=' + args.page
     try {
         let pro = await req(listUrl, { headers: appConfig.headers })
         backData.error = pro.error
