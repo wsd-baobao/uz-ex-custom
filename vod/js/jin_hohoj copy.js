@@ -225,6 +225,39 @@ async function getSubclassVideoList(args) {
 async function getVideoDetail(args) {
     var backData = new RepVideoDetail()
     try {
+        let webUrl = args.url
+        let pro = await req(webUrl, { headers: this.headers })
+        backData.error = pro.error
+        let proData = pro.data
+        if (proData) {
+            let document = parse(proData)
+            let vod_content = ''
+            let vod_pic = document.querySelector('.img-placeholder')?.attributes['src'] ?? ''
+            let vod_name = document.querySelector('.article-title')?.text ?? ''
+            let vod_year = ''
+            let vod_director = ''
+            let vod_actor = ''
+            let vod_area = ''
+            let vod_lang = ''
+            let vod_douban_score = ''
+            let type_name = document.querySelector('#latest-jav-carousel > div.glide__track > ul > li.glide__slide.glide__slide--active > div > div:nth-child(1) > a > div.video-item-title.mt-1')?.text ?? ''
+
+            let detModel = new VideoDetail()
+            detModel.vod_year = vod_year
+            detModel.type_name = type_name
+            detModel.vod_director = vod_director
+            detModel.vod_actor = vod_actor
+            detModel.vod_area = vod_area
+            detModel.vod_lang = vod_lang
+            detModel.vod_douban_score = vod_douban_score
+            detModel.vod_content = vod_content.trim()
+            detModel.vod_pic = vod_pic
+            detModel.vod_name = vod_name
+            detModel.vod_play_url = `$${webUrl}#`
+            detModel.vod_id = webUrl
+
+            backData.data = detModel
+        }
     } catch (error) {
         backData.error = error.toString()
     }
@@ -238,7 +271,23 @@ async function getVideoDetail(args) {
  */
 async function getVideoPlayUrl(args) {
     var backData = new RepVideoPlayUrl()
+    let url = args.url
     try {
+        let html = await req(url, { headers: this.headers })
+        backData.error = html.error
+        let document = parse(html.data)
+
+        let w = document.querySelector('body > div.container.mt-3 > div > div.col.player-col > iframe').getAttribute('src')
+        let dash = UZUtils.getHostFromURL(w)
+        let dashResp = (await req(w, { headers: this.headers })).data
+        let dashHtml = parse(dashResp)
+        let html2 = dashHtml.querySelectorAll('body script')[5].text
+        let token = html2.match(/var token = (.+);/)[1]
+        let m3u8 = html2.match(/var m3u8 = (.+);/)[1]
+
+        let play_url = dash + m3u8 + '?token=' + token
+
+        backData.data = play_url.replace(/'|"/gm, '')
     } catch (error) {
         backData.error = error.toString()
     }
