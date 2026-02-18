@@ -5,7 +5,7 @@
 // 版本号纯数字
 //@version:1
 // 备注，没有的话就不填
-//@remark:这是备注
+//@remark:无法播放！！！
 // 加密 id，没有的话就不填
 //@codeID:
 // 使用的环境变量，没有的话就不填
@@ -94,7 +94,8 @@ const appConfig = {
     },
     _headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-        'Referer': 'https://cn.pornhub.com',
+        'Referer': 'https://pornhub.com',
+        'Origin': 'https://pornhub.com',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'Connection': 'keep-alive',
@@ -197,7 +198,7 @@ async function getVideoList(args) {
 
                 let videoDet = {}
                 videoDet.vod_id = vodUrl
-                // videoDet.vod_pic = vodPic
+                videoDet.vod_pic = vodPic
                 videoDet.vod_name = vodName
                 videoDet.vod_remarks = vodDiJiJi.trim()
                 videos.push(videoDet)
@@ -249,7 +250,8 @@ async function getVideoDetail(args) {
             let vod_lang = ''
             let vod_douban_score = ''
             let type_name = document.querySelector('#latest-jav-carousel > div.glide__track > ul > li.glide__slide.glide__slide--active > div > div:nth-child(1) > a > div.video-item-title.mt-1')?.text ?? ''
-            let play_url = document.querySelector('meta[property="og:video:url"]').content
+
+            let play_url = document.querySelector('#js-tabData').getAttribute('data-default').match(/https?:\/\/[^\s"&<>]+/)[0]
 
             let detModel = new VideoDetail()
             detModel.vod_year = vod_year
@@ -262,7 +264,8 @@ async function getVideoDetail(args) {
             detModel.vod_content = vod_content.trim()
             detModel.vod_pic = vod_pic
             detModel.vod_name = vod_name
-            detModel.vod_play_url = play_url
+            detModel.vod_play_url = `$${webUrl}#`
+            // "&" + play_url + "#"
             //`$${webUrl}#`
             detModel.vod_id = args.url
 
@@ -286,18 +289,25 @@ async function getVideoPlayUrl(args) {
         let html = await req(url, { headers: appConfig.headers })
         backData.error = html.error
         let document = parse(html.data)
-        let w = document.querySelector('iframe.player').getAttribute('src')
-        let embed = await req(appConfig.webSite + w, { headers: appConfig.headers })
-        backData.error = embed.error
-        let embedData = embed.data
-        if (embedData) {
-            let document = parse(embedData)
-            let m3u8 = document.querySelector('body > script').text.match(/var videoSrc = (.+);/)[1]
-            backData.data = m3u8
-        }
+        let embedurl = document.querySelector('#js-tabData').getAttribute('data-default').match(/https?:\/\/[^\s"&<>]+/)[0]
 
+        let embed = await req(embedurl, { headers: appConfig.headers })
+        let embedhtml = parse(embed.data)
+        let text = embedhtml.querySelectorAll('body > script')[3].text
+
+        flashvars = JSON.parse(text.match(/var\s+flashvars\s*=\s*(\{[\s\S]*?\}),\s*utmSource/)[1])
+
+
+        const best = flashvars.mediaDefinitions.sort((a, b) => b.height - a.height)[0];
+        const hls = flashvars.mediaDefinitions
+            .filter(x => x.format === "hls")
+            .sort((a, b) => b.height - a.height)[0];
+
+        //todo: 无法播fang
+
+        backData.data = hls.videoUrl
     } catch (error) {
-        backData.error = error.toString() + "||||" + w.toString()
+        backData.error = error.toString()
     }
     return JSON.stringify(backData)
 }
